@@ -1,0 +1,24 @@
+{
+  "name": "systemjs-bundle-minify",
+  "version": "1.0.0",
+  "description": "Contains minifier utilities specific to SystemJS self-executing bundles",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tengyifei/systemjs-bundle-minify.git"
+  },
+  "keywords": [
+    "SystemJS",
+    "bundle",
+    "minify"
+  ],
+  "author": "Yifei Teng <tengyifei88@gmail.com> (https://thinkingandcomputing.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tengyifei/systemjs-bundle-minify/issues"
+  },
+  "homepage": "https://github.com/tengyifei/systemjs-bundle-minify#readme"
+}

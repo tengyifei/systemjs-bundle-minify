@@ -10,7 +10,7 @@ module.exports = {
    * @param {String} src - Javascript source of the bundle
    * @returns {String} bundle with minified module names
    */
-  function minifyModuleNames (src) {
+  minifyModuleNames: function (src) {
     var n = types.namedTypes;
 
     var ast = recast.parse(src);

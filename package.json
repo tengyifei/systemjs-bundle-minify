@@ -20,5 +20,15 @@
   "bugs": {
     "url": "https://github.com/tengyifei/systemjs-bundle-minify/issues"
   },
-  "homepage": "https://github.com/tengyifei/systemjs-bundle-minify#readme"
+  "homepage": "https://github.com/tengyifei/systemjs-bundle-minify#readme",
+  "devDependencies": {
+    "chai": "^3.0.0",
+    "mocha": "^2.2.5"
+  },
+  "dependencies": {
+    "ast-types": "^0.7.6",
+    "install": "^0.1.8",
+    "lodash": "^3.9.3",
+    "recast": "^0.10.12"
+  }
 }

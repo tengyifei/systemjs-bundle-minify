@@ -26,8 +26,13 @@ module.exports = {
     }
 
     var visitorBase = {
+
       isRegisterCall: function (callExpr) {
         n.CallExpression.assert(callExpr);
+
+        /* Match this format:
+         * System.register("module name", ["dependency", ...], boolean, function( ... ) { ... })
+         */
         return n.MemberExpression.check(callExpr.callee)
             && n.Identifier.check(callExpr.callee.object)
             && callExpr.callee.object.name === 'System'
@@ -37,6 +42,10 @@ module.exports = {
 
       isRequireCall: function (callExpr) {
         n.CallExpression.assert(callExpr);
+
+        /* Match this format:
+         * require("module name")
+         */
         return n.Identifier.check(callExpr.callee)
             && callExpr.callee.name === 'require'
             && callExpr.arguments.length === 1
@@ -115,12 +124,11 @@ module.exports = {
     for (var name in knownModules) modules.push(knownModules[name]);
     modules = _.sortBy(modules, function (m) { return -m.count });   // sort from most used to least used
     // Rename
-    function setName(newName, setter) {
-      setter(newName);
-    }
     for (var i = 0; i < modules.length; i++) {
       var newName = Number(i).toString(36);
-      modules[i].nameSetters.forEach(setName.bind(null, newName));
+      modules[i].nameSetters.forEach(function (setter) {
+        setter(newName);
+      });
     }
     return recast.print(ast).code;
   }

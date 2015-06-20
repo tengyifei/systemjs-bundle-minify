@@ -2,14 +2,13 @@ Introduction
 ============
 This package contains special minification utilities for SystemJS self-executing bundles.
 Currently it supports the following:
-+ Minify modules names
++ Minify modules names i.e. `github:jspm/some-really-long-module@1.2.3` -> `a`
 
 Installation
 ============
 From NPM:
 
     npm install systemjs-bundle-minify
-
 
 Usage
 =====

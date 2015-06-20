@@ -1,0 +1,1 @@
+export function adder (num) { return num + 1; }

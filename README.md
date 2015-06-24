@@ -1,5 +1,7 @@
 Introduction
 ============
+[![NPM](https://nodei.co/npm/systemjs-bundle-minify.png)](https://nodei.co/npm/systemjs-bundle-minify/)
+
 This package contains special minification utilities for SystemJS self-executing bundles.
 Currently it supports the following:
 + Minify modules names i.e. `github:jspm/some-really-long-module@1.2.3` -> `a`

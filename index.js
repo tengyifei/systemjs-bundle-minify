@@ -31,7 +31,7 @@ module.exports = {
         n.CallExpression.assert(callExpr);
 
         /* Match these formats:
-         * System.register("module name", ["dependency", ...], boolean, function( ... ) { ... })
+         * System.register("module name", ["dependency", ...], boolean, [function( ... ) { ... }])
          * System.registerDynamic("module name", ["dependency", ...], boolean, function( ... ) { ... })
          */
         return n.MemberExpression.check(callExpr.callee)

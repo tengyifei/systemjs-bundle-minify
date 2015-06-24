@@ -30,14 +30,15 @@ module.exports = {
       isRegisterCall: function (callExpr) {
         n.CallExpression.assert(callExpr);
 
-        /* Match this format:
+        /* Match these formats:
          * System.register("module name", ["dependency", ...], boolean, function( ... ) { ... })
+         * System.registerDynamic("module name", ["dependency", ...], boolean, function( ... ) { ... })
          */
         return n.MemberExpression.check(callExpr.callee)
             && n.Identifier.check(callExpr.callee.object)
             && callExpr.callee.object.name === 'System'
             && n.Identifier.check(callExpr.callee.property)
-            && callExpr.callee.property.name === 'register';
+            && (callExpr.callee.property.name === 'register' || callExpr.callee.property.name === 'registerDynamic');
       },
 
       isRequireCall: function (callExpr) {
@@ -90,6 +91,7 @@ module.exports = {
           n.Literal.assert(node.arguments[0]);
           this.registerModule(node.arguments[0]);
           n.ArrayExpression.assert(node.arguments[1]);
+          // Register each dependency
           node.arguments[1].elements.forEach(function (element) {
             n.Literal.assert(element);
             this.registerModule(element);

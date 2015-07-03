@@ -1,6 +1,6 @@
 {
   "name": "systemjs-bundle-minify",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Contains minifier utilities specific to SystemJS self-executing bundles",
   "main": "index.js",
   "scripts": {

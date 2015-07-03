@@ -45,13 +45,6 @@ function testWithBuilder (Builder) {
           vm.createContext(sandbox);
           vm.runInContext(minifyName(source), sandbox);
           should(sandbox.moduleResult).be.equal(42);
-        })
-        .catch(function (err) {
-          if (typeof err === 'object' && err.message) {
-            throw err.message;    // unwrap error message for mocha
-          } else {
-            throw err;
-          }
         });
       });
 

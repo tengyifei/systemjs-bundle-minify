@@ -33,9 +33,9 @@ module.exports = {
         n.CallExpression.assert(callExpr);
 
         /* Match these formats:
-         * System.register("module name", ["dependency", ...], boolean, [function( ... ) { ... }])
-         * System.register("module name", ["dependency", ...], [function( ... ) { ... }])
-         * System.registerDynamic("module name", ["dependency", ...], function( ... ) { ... })
+         * [Object].register("module name", ["dependency", ...], boolean, function( ... ) { ... })
+         * [Object].register("module name", ["dependency", ...], function( ... ) { ... })
+         * [Object].registerDynamic("module name", ["dependency", ...], function( ... ) { ... })
          */
         return n.MemberExpression.check(callExpr.callee)
             && n.Identifier.check(callExpr.callee.object)
@@ -44,6 +44,7 @@ module.exports = {
               || callExpr.callee.property.name === 'registerDynamic' )
             && n.Literal.check(callExpr.arguments[0])
             && n.ArrayExpression.check(callExpr.arguments[1])
+            && callExpr.arguments[1].elements.every(function (e) { return n.Literal.check(e); })
             && ( n.FunctionExpression.check(callExpr.arguments[2])  // v0.18
               || n.Literal.check(callExpr.arguments[2]) );  // v0.16
       },
@@ -64,9 +65,11 @@ module.exports = {
         n.CallExpression.assert(callExpr);
 
         /* Match this format:
-         * (function (mains, declare) { ... } )( ... )(['mainModule'], function(System) { ... })
+         * (function (global) { ... } )( ... )(['mainModule'], function([Identifier]) { ... })
          */
         return n.CallExpression.check(callExpr.callee)
+            && n.FunctionExpression.check(callExpr.callee.callee)
+            && callExpr.callee.callee.params.length === 1
             && callExpr.arguments.length === 2
             && n.ArrayExpression.check(callExpr.arguments[0])
             && callExpr.arguments[0].elements.every(function (e) { return n.Literal.check(e); })

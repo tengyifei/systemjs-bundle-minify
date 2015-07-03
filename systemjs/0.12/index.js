@@ -1,1 +1,1 @@
-module.exports = require('./lib/builder');
+module.exports = require('systemjs-builder');

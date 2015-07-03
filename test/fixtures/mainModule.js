@@ -1,4 +1,4 @@
-import { adder } from './adderModule.js'
-import func from './callerModule.js';
+import { adder } from './adderModule'
+import func from './callerModule';
 
 moduleResult = adder(func());

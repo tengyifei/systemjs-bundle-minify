@@ -40,7 +40,8 @@ module.exports = {
             && (callExpr.callee.property.name === 'register' || callExpr.callee.property.name === 'registerDynamic')
             && n.Literal.check(callExpr.arguments[0])
             && n.ArrayExpression.check(callExpr.arguments[1])
-            && n.FunctionExpression.check(callExpr.arguments[2]);
+            && ( n.FunctionExpression.check(callExpr.arguments[2])  // v0.18
+              || n.Literal.check(callExpr.arguments[2]) );  // v0.16
       },
 
       isRequireCall: function (callExpr) {

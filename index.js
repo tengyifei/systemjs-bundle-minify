@@ -36,9 +36,11 @@ module.exports = {
          */
         return n.MemberExpression.check(callExpr.callee)
             && n.Identifier.check(callExpr.callee.object)
-            && callExpr.callee.object.name === 'System'
             && n.Identifier.check(callExpr.callee.property)
-            && (callExpr.callee.property.name === 'register' || callExpr.callee.property.name === 'registerDynamic');
+            && (callExpr.callee.property.name === 'register' || callExpr.callee.property.name === 'registerDynamic')
+            && n.Literal.check(callExpr.arguments[0])
+            && n.ArrayExpression.check(callExpr.arguments[1])
+            && n.FunctionExpression.check(callExpr.arguments[2]);
       },
 
       isRequireCall: function (callExpr) {

@@ -8,13 +8,12 @@ var vm = require('vm');
 var minifyName = minifier.minifyModuleNames;
 
 var suites = [
-  { name: 'with unminified bundle', options: { } },
-  { name: 'with minified bundle', options: { minify: true, mangle: true } }
+  { name: '(with unminified bundle)', options: { minify: false, mangle: false } },
+  { name: '(with minified bundle)', options: { minify: true, mangle: true } }
 ];
 
 for (var suite of suites) {
-  describe('minifyModuleNames ' + suite.name, function () {
-
+  describe('minifyModuleNames ' + suite.name, (function (suite) { return function () {
     var builder;
     var buildResult;
     beforeEach(function () {
@@ -52,9 +51,8 @@ for (var suite of suites) {
         minified.indexOf('mainModule.js').should.be.equal(-1);
         minified.indexOf('adderModule.js').should.be.equal(-1);
         minified.indexOf('callerModule.js').should.be.equal(-1);
-        minified.indexOf('System.register').should.not.be.equal(-1);
       });
     });
 
-  });
+  }})(suite));
 }

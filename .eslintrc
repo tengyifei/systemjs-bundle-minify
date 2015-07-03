@@ -1,0 +1,13 @@
+{
+	"env": {
+        "node": true
+    },
+    "ecmaFeatures": {
+        "forOf": true
+    },
+	"rules": {
+		"quotes": [1, "single", "avoid-escape"],
+		"curly": [2, "multi-line"],
+		"no-loop-func": [0]
+	}
+}

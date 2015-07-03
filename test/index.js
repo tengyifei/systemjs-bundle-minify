@@ -1,7 +1,8 @@
-var should = require('chai').should();
+'use strict';
+
+var should = require('should');
 var minifier = require('../index');
 var path = require('path');
-var util = require('util');
 var vm = require('vm');
 
 var minifyName = minifier.minifyModuleNames;
@@ -15,18 +16,13 @@ var builders = [
   { name: 'current', module: require('systemjs-builder') },
   { name: 'v0.12', module: require('systemjs-builder-12') },
   { name: 'v0.11', module: require('systemjs-builder-11') },
-  { name: 'v0.10', module: require('systemjs-builder-10') },
+  { name: 'v0.10', module: require('systemjs-builder-10') }
 ];
 
-for (var builder of builders) {
-  describe('Against systemjs-builder version: ' + builder.name, (function (builder) {
-    return function () { testWithBuilder(builder.module); };
-  })(builder));
-}
 
 function testWithBuilder (Builder) {
-  for (var suite of suites) {
-    describe('minifyModuleNames ' + suite.name, (function (suite) { return function () {
+  for (var _suite of suites) {
+    describe('minifyModuleNames ' + _suite.name, (function (suite) { return function () {
       var builder;
       var buildResult;
       beforeEach(function () {
@@ -38,7 +34,7 @@ function testWithBuilder (Builder) {
         buildResult = builder.buildSFX('mainModule', suite.options)
         .then(function (output) {
           return output.source;
-        })
+        });
       });
 
       it('minified program should run correctly', function () {
@@ -48,13 +44,14 @@ function testWithBuilder (Builder) {
           var sandbox = { moduleResult: false, global: global };
           vm.createContext(sandbox);
           vm.runInContext(minifyName(source), sandbox);
-          sandbox.moduleResult.should.be.equal(42);
+          should(sandbox.moduleResult).be.equal(42);
         })
         .catch(function (err) {
-          if (typeof err === 'object' && err.message)
+          if (typeof err === 'object' && err.message) {
             throw err.message;    // unwrap error message for mocha
-          else
+          } else {
             throw err;
+          }
         });
       });
 
@@ -70,6 +67,12 @@ function testWithBuilder (Builder) {
         });
       }
 
-    }})(suite));
+    }; })(_suite));
   }
+}
+
+for (var _builder of builders) {
+  describe('Against systemjs-builder version: ' + _builder.name, (function (builder) {
+    return function () { testWithBuilder(builder.module); };
+  })(_builder));
 }

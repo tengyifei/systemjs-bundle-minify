@@ -25,10 +25,11 @@
     "babel-core": "^5.5.8",
     "chai": "^3.0.0",
     "mocha": "^2.2.5",
+    "should": "^7.0.1",
     "systemjs-builder": "*",
-    "systemjs-builder-12": "file:./systemjs/0.12",
+    "systemjs-builder-10": "file:./systemjs/0.10",
     "systemjs-builder-11": "file:./systemjs/0.11",
-    "systemjs-builder-10": "file:./systemjs/0.10"
+    "systemjs-builder-12": "file:./systemjs/0.12"
   },
   "dependencies": {
     "ast-types": "^0.7.6",

@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('lodash');
 var recast = require('recast');
 var types = require('ast-types');
@@ -32,12 +34,14 @@ module.exports = {
 
         /* Match these formats:
          * System.register("module name", ["dependency", ...], boolean, [function( ... ) { ... }])
-         * System.registerDynamic("module name", ["dependency", ...], boolean, function( ... ) { ... })
+         * System.register("module name", ["dependency", ...], [function( ... ) { ... }])
+         * System.registerDynamic("module name", ["dependency", ...], function( ... ) { ... })
          */
         return n.MemberExpression.check(callExpr.callee)
             && n.Identifier.check(callExpr.callee.object)
             && n.Identifier.check(callExpr.callee.property)
-            && (callExpr.callee.property.name === 'register' || callExpr.callee.property.name === 'registerDynamic')
+            && ( callExpr.callee.property.name === 'register'
+              || callExpr.callee.property.name === 'registerDynamic' )
             && n.Literal.check(callExpr.arguments[0])
             && n.ArrayExpression.check(callExpr.arguments[1])
             && ( n.FunctionExpression.check(callExpr.arguments[2])  // v0.18

@@ -62,10 +62,10 @@ module.exports = {
         return n.CallExpression.check(callExpr.callee)
             && callExpr.arguments.length === 2
             && n.ArrayExpression.check(callExpr.arguments[0])
+            && callExpr.arguments[0].elements.every(function (e) { return n.Literal.check(e); })
             && n.FunctionExpression.check(callExpr.arguments[1])
             && callExpr.arguments[1].params.length === 1
-            && n.Identifier.check(callExpr.arguments[1].params[0])
-            && callExpr.arguments[1].params[0].name === 'System';
+            && n.Identifier.check(callExpr.arguments[1].params[0]);
       },
 
       /**
@@ -102,15 +102,21 @@ module.exports = {
     }, visitorBase));
 
     // Second pass: collect required modules and main module
+    var haveMainModuleCall = false;
     types.visit(ast, _.assign({
       visitCallExpression: function (path) {
         var node = path.node;
         if (this.isRequireCall(node)) {
-          if (knownModules[node.arguments[0].value])
+          if (knownModules[node.arguments[0].value]) {
             this.registerModule(node.arguments[0]);
+          }
         }
 
         if (this.isMainModuleCall(node)) {
+          if (haveMainModuleCall) {
+            throw new Error('Multiple main module calls detected');
+          }
+          haveMainModuleCall = true;
           var mainModules = node.arguments[0].elements;
           mainModules.forEach(function (element) {
             n.Literal.assert(element);
@@ -122,9 +128,11 @@ module.exports = {
       }
     }, visitorBase));
 
+    if (!haveMainModuleCall) throw new Error('Did not find main module');
+
     var modules = [];
     for (var name in knownModules) modules.push(knownModules[name]);
-    modules = _.sortBy(modules, function (m) { return -m.count });   // sort from most used to least used
+    modules = _.sortBy(modules, function (m) { return -m.count; });   // sort from most used to least used
     // Rename
     for (var i = 0; i < modules.length; i++) {
       var newName = Number(i).toString(36);
@@ -134,4 +142,4 @@ module.exports = {
     }
     return recast.print(ast).code;
   }
-}
+};

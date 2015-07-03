@@ -1,4 +1,4 @@
-Introduction
+SystemJS Bundle Minifier [![Build Status](https://travis-ci.org/tengyifei/systemjs-bundle-minify.svg?branch=master)](https://travis-ci.org/tengyifei/systemjs-bundle-minify)
 ============
 [![NPM](https://nodei.co/npm/systemjs-bundle-minify.png)](https://nodei.co/npm/systemjs-bundle-minify/)
 

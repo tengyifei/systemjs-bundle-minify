@@ -44,7 +44,8 @@ function testWithBuilder (Builder) {
           global.moduleResult = false;
           var sandbox = { global: global };
           vm.createContext(sandbox);
-          vm.runInContext(minifyName(source), sandbox);
+          var code;
+          vm.runInContext(code = minifyName(source), sandbox);
           should(global.moduleResult).be.equal(42);
         });
       });

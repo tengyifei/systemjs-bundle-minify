@@ -36,8 +36,10 @@ module.exports = {
          * [Object].register("module name", ["dependency", ...], boolean, function( ... ) { ... })
          * [Object].register("module name", ["dependency", ...], function( ... ) { ... })
          * [Object].registerDynamic("module name", ["dependency", ...], function( ... ) { ... })
+         *
+         * define("module name", ["dependency", ...], function( ... ) { ... })
          */
-        return n.MemberExpression.check(callExpr.callee)
+        var systemJsRegister = n.MemberExpression.check(callExpr.callee)
             && n.Identifier.check(callExpr.callee.object)
             && n.Identifier.check(callExpr.callee.property)
             && ( callExpr.callee.property.name === 'register'
@@ -47,6 +49,16 @@ module.exports = {
             && callExpr.arguments[1].elements.every(function (e) { return n.Literal.check(e); })
             && ( n.FunctionExpression.check(callExpr.arguments[2])  // v0.18
               || n.Literal.check(callExpr.arguments[2]) );  // v0.16
+
+        var amdRegister = n.Identifier.check(callExpr.callee)
+            && callExpr.callee.name === 'define'
+            && callExpr.arguments.length === 3
+            && n.Literal.check(callExpr.arguments[0])
+            && n.ArrayExpression.check(callExpr.arguments[1])
+            && callExpr.arguments[1].elements.every(function (e) { return n.Literal.check(e); })
+            && n.FunctionExpression.check(callExpr.arguments[2]);
+
+        return systemJsRegister || amdRegister;
       },
 
       isRequireCall: function (callExpr) {
@@ -54,11 +66,21 @@ module.exports = {
 
         /* Match this format:
          * require("module name")
+         *
+         * define("module name", module)
          */
-        return n.Identifier.check(callExpr.callee)
+        var systemJsRequire = n.Identifier.check(callExpr.callee)
             && callExpr.callee.name === 'require'
             && callExpr.arguments.length === 1
             && n.Literal.check(callExpr.arguments[0]);
+
+        var amdRequire = n.Identifier.check(callExpr.callee)
+            && callExpr.callee.name === 'define'
+            && callExpr.arguments.length === 2
+            && n.Literal.check(callExpr.arguments[0])
+            && n.Identifier.check(callExpr.arguments[1]);
+
+        return systemJsRequire || amdRequire;
       },
 
       isMainModuleCall: function (callExpr) {
@@ -144,12 +166,16 @@ module.exports = {
     for (var name in knownModules) modules.push(knownModules[name]);
     modules = _.sortBy(modules, function (m) { return -m.count; });   // sort from most used to least used
     // Rename
+    var moduleMap = {};
     for (var i = 0; i < modules.length; i++) {
       var newName = Number(i).toString(36);
       modules[i].nameSetters.forEach(function (setter) {
         setter(newName);
       });
+      moduleMap[modules[i].name] = newName;
     }
-    return recast.print(ast).code;
+    var code = new String(recast.print(ast).code);
+    code.moduleMap = moduleMap;
+    return code;
   }
 };

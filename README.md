@@ -23,3 +23,20 @@ builder.buildSFX('myModule.js', options)
     return minifier.minifyModuleNames(output.source);
 });
 ```
+
+Module maps
+===========
+The returned string object has a `moduleMap` field that allows you to inspect the correspondence between modules names before and after minification.
+```js
+builder.buildSFX('myModule.js', options)
+.then(function (output) {
+    var code = minifier.minifyModuleNames(output.source);
+    for (var key in code.moduleMap) {
+        console.log(key, '->', code.moduleMap[key]));
+    }
+});
+// Output:
+// adderModule -> 0
+// callerModule -> 1
+// mainModule -> 2
+```

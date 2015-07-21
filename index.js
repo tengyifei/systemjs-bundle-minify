@@ -115,7 +115,7 @@ module.exports = {
     };
 
     // Collect module names
-    types.visit(ast, _.assign({
+    types.visit(ast.program, _.assign({
       visitCallExpression: function (path) {
         var node = path.node;
         if (this.isRegisterCall(node)) {
@@ -135,7 +135,7 @@ module.exports = {
 
     // Second pass: collect required modules and main module
     var haveMainModuleCall = false;
-    types.visit(ast, _.assign({
+    types.visit(ast.program, _.assign({
       visitCallExpression: function (path) {
         var node = path.node;
         if (this.isRequireCall(node)) {
@@ -162,8 +162,13 @@ module.exports = {
 
     if (!haveMainModuleCall) throw new Error('Did not find main module');
 
+    // Modules to be excluded from renaming
+    var exclude = {
+      '@empty': true
+    };
     var modules = [];
     for (var name in knownModules) modules.push(knownModules[name]);
+    modules = modules.filter(function (mod) { return !exclude[mod.name]; });
     modules = _.sortBy(modules, function (m) { return -m.count; });   // sort from most used to least used
     // Rename
     var moduleMap = {};
